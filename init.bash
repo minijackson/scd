@@ -7,7 +7,7 @@ function scd() {
 
 	local stopOptionsParsing
 
-	for i in $* ; do
+	for i in "$@" ; do
 		if [[ -z "$stopOptionsParsing" ]]; then
 			if [[ "$i" == "-v" || "$i" == "-h" ]]; then
 				if [[ -z "$options" ]]; then
@@ -19,18 +19,18 @@ function scd() {
 			elif [[ "$i" == "--" ]]; then
 				stopOptionsParsing="Y"
 			elif [[ -z "$dir1" ]]; then
-				dir1=$(realpath -- $i)
+				dir1=$(realpath -- "$i")
 			elif [[ -z "$dir2" ]]; then
-				dir2=$(realpath -- $i)
+				dir2=$(realpath -- "$i")
 			else
 				echo "Usage: $0 [-h|-v] [--] dir1 dir2"
 				return 64
 			fi
 		else
 			if [[ -z "$dir1" ]]; then
-				dir1=$(realpath -- $i)
+				dir1=$(realpath -- "$i")
 			elif [[ -z "$dir2" ]]; then
-				dir2=$(realpath -- $i)
+				dir2=$(realpath -- "$i")
 			else
 				echo "Usage: $0 [-h|-v] [--] dir1 dir2"
 				return 64
@@ -53,8 +53,8 @@ function scd() {
 				return 78
 			fi
 		else
-			tmux split-window $options "$SHELL -c 'cd $dir2 ; $SHELL -i'"
-			cd $dir1
+			tmux split-window $options "$SHELL -c 'cd \"$dir2\" ; $SHELL -i'"
+			cd "$dir1"
 			clear
 		fi
 	else
